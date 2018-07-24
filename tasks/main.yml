@@ -1,0 +1,44 @@
+# IMPORTANT!  If using Splunk, you need at _least_ 1GB of ram
+# Vagrant has only 500MB out of the box
+
+---
+# tasks file for splunk-docker
+
+- name: Create data container
+  docker_container:
+    name: '{{ splunk_container_name }}-data'
+    image: busybox
+    state: present
+  when: splunk_use_data_container
+
+- name: Pull Splunk image
+  docker_image:
+    name: '{{ splunk_docker_image }}'
+    tag:  '{{ splunk_docker_image_tag }}'
+
+- name: Setup Splunk container
+  docker_container:
+    name:  '{{ splunk_container_name }}'
+    image: '{{ splunk_docker_image }}:{{ splunk_docker_tag }}'
+    state:  started
+    memory: '{{ container_memory_limit | default(omit) }}'
+    ports:
+      - '{{ splunk_http_port }}:8000'
+      - '{{ splunk_admin_port }}:8088'
+      - '{{ splunk_hec_port }}:8089'
+    volumes_from:
+      - '{{ ( splunk_container_name + "-data" ) | default(omit) }}'
+    volumes:
+      - '{{ ( splunk_data_dir + ":/opts/splunk" ) | default(omit) }}'
+    env:
+      TZ: '{{ splunk_container_timezone }}'
+      SPLUNK_START_ARGS: "--accept-license"
+      SPLUNK_USER:  "splunk"
+      SPLUNK_CMD:   "edit user admin -password {{ splunk_password }} -role admin -auth admin:changeme"
+#      SPLUNK_CMD_1: "add index diana -auth admin:{{ splunk_password }}"
+#      SPLUNK_CMD_2: "http-event-collector enable -enable-ssl 0 -uri https://localhost:8089 -auth admin:{{ splunk_password }}"
+#      SPLUNK_CMD_3: "http-event-collector create diana_token 'diana index token' -index diana -uri https://localhost:8089 -auth admin:{{ splunk_password }}"
+
+#  notify: restart_orthanc_container
+  register: splunk_container
+

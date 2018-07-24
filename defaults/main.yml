@@ -1,0 +1,19 @@
+---
+# defaults file for splunk-docker
+
+splunk_docker_image:       "splunk/splunk"
+splunk_docker_image_tag:   "latest"
+
+# Docker container configuration
+# -----------------------------
+splunk_container_name:     "splunk"
+splunk_use_data_container: True
+splunk_data_dir:           "/opt/splunk"
+splunk_http_port:          8000
+splunk_admin_port:         8088
+splunk_hec_token:          8089
+splunk_container_timezone: "America/New_York"
+
+# Service configuration
+# -----------------------------
+splunk_password:            "passw0rd!"
