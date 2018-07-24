@@ -8,9 +8,8 @@ services:
 
 env:
   # Defaults
-  orthanc_default_user:     orthanc
-  orthanc_default_password: passw0rd!
-  orthanc_default_api_port: 8042
+  splunk_default_password: passw0rd!
+  splunk_default_http_port: 8000
 
 before_install:
   # Make sure everything's up to date.
@@ -18,11 +17,7 @@ before_install:
 
 install:
   # Install Ansible
-  - pip install ansible
-
-  # Add ansible.cfg to pick up roles path
-  - "echo '[defaults]\nroles_path = ../' > ansible1.cfg"
-  - cat ansible1.cfg
+  - pip install ansible docker-py
 
 script:
   # We'll add some commands to test the role here.
@@ -40,4 +35,4 @@ script:
     || (echo 'Idempotence test: fail' && exit 1)
 
   # Request a page via the web server, to make sure it's running and responds.
-  - "curl -u ${orthanc_default_user}:${orthanc_default_password} http://localhost:${orthanc_default_api_port}/"
+  - "curl -u admin:${splunk_default_password} http://localhost:${splunk_default_http_port}/"
