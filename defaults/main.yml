@@ -16,4 +16,4 @@ splunk_container_timezone: "America/New_York"
 
 # Service configuration
 # -----------------------------
-splunk_password:            "passw0rd!"
+splunk_password:           "passw0rd!"
