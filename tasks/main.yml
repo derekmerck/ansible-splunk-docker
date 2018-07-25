@@ -19,7 +19,7 @@
 - name: Setup Splunk container
   docker_container:
     name:  '{{ splunk_container_name }}'
-    image: '{{ splunk_docker_image }}:{{ splunk_docker_tag }}'
+    image: '{{ splunk_docker_image }}:{{ splunk_docker_image_tag }}'
     state:  started
     memory: '{{ container_memory_limit | default(omit) }}'
     ports:
@@ -27,18 +27,18 @@
       - '{{ splunk_admin_port }}:8088'
       - '{{ splunk_hec_port }}:8089'
     volumes_from:
-      - '{{ ( splunk_container_name + "-data" ) | default(omit) }}'
+      - '{{ ( splunk_use_data_container and ( splunk_container_name + "-data" )) | default(omit) }}'
     volumes:
-      - '{{ ( splunk_data_dir + ":/opts/splunk" ) | default(omit) }}'
+      - '{{ ( not splunk_use_data_container and (splunk_data_dir + ":/opts/splunk" )) | default(omit) }}'
     env:
       TZ: '{{ splunk_container_timezone }}'
       SPLUNK_START_ARGS: "--accept-license"
       SPLUNK_USER:  "splunk"
       SPLUNK_CMD:   "edit user admin -password {{ splunk_password }} -role admin -auth admin:changeme"
-#      SPLUNK_CMD_1: "add index diana -auth admin:{{ splunk_password }}"
-#      SPLUNK_CMD_2: "http-event-collector enable -enable-ssl 0 -uri https://localhost:8089 -auth admin:{{ splunk_password }}"
-#      SPLUNK_CMD_3: "http-event-collector create diana_token 'diana index token' -index diana -uri https://localhost:8089 -auth admin:{{ splunk_password }}"
 
 #  notify: restart_orthanc_container
   register: splunk_container
 
+- name: Wait until Splunk is available
+  wait_for: port={{ splunk_http_port }} delay=3
+  when: splunk_container.changed
