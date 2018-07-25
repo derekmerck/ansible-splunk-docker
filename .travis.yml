@@ -36,9 +36,9 @@ script:
 #    || (echo 'Idempotence test: fail' && exit 1)
 
   # Request a page via the web server, to make sure it's running and responds.
-  - 'curl -u "admin:${splunk_default_password}" "http://localhost:${splunk_default_http_port}/"'
+  - 'curl -u "admin:${splunk_default_password}" -L "http://localhost:${splunk_default_http_port}/"'
 
-  - 'docker logs splunk'
+#  - 'docker logs splunk'
 
 notifications:
-    webhooks: https://galaxy.ansible.com/api/v1/notifications/
+  webhooks: https://galaxy.ansible.com/api/v1/notifications/
