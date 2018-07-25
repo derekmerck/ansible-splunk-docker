@@ -16,6 +16,10 @@ install:
   # Install Ansible
   - pip install ansible
 
+  # Install deps
+  - ansible-galaxy install geerlingguy.pip geerlingguy.docker
+
+
 script:
   # We'll add some commands to test the role here.
   # Check the role/playbook's syntax.
