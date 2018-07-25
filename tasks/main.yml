@@ -31,11 +31,13 @@
     volumes: '{{ [splunk_data_dir + ":/opts/splunk"] if not splunk_use_data_container else [] }}'
     env:
       TZ: '{{ splunk_container_timezone }}'
-      SPLUNK_START_ARGS: "--accept-license"
+      SPLUNK_START_ARGS: '--accept-license --seed-passwd {{ splunk_password }}'
       SPLUNK_USER:  "splunk"
-      SPLUNK_CMD:   'edit user admin -password {{ splunk_password }} -role admin -auth admin:changeme'
+#      SPLUNK_CMD:   'edit user admin -password {{ splunk_password }} -role admin -auth admin:changeme'
   register: splunk_container
 
 - name: Wait until Splunk is available
   wait_for: port={{ splunk_http_port }} delay=3
   when: splunk_container.changed
+
+#docker run -d -e "SPLUNK_START_ARGS=--accept-license " -e "SPLUNK_USER=root" -p "8000:8000" splunk/splunk
