@@ -9,26 +9,52 @@ Configure and run a Splunk data index in a Docker container.
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+Requires Docker, Docker-py and the `docker_image` and `docker_container` modules.
+
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+### Docker Image and Tag
+
+Set the Splunk version tag.
+
+```yaml
+splunk_docker_image_tag:   "latest"
+```
+
+### Docker Container Configuration
+
+```yaml
+splunk_container_name:     "splunk"
+splunk_use_data_container: True
+splunk_data_dir:           "/opt/splunk"
+splunk_http_port:          8000
+splunk_admin_port:         8088
+splunk_hec_token:          8089
+splunk_container_timezone: "America/New_York"
+```
+
+### Service Configuration
+
+```yaml
+splunk_password:            "passw0rd!"
+```
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+- `geerlingguy.docker` to setup the docker environment
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+```yaml
+- hosts: servers
+  roles:
+     - derekmerck.splunk-docker
+```
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
 
 License
 -------
