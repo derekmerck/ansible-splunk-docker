@@ -4,9 +4,10 @@ language: python
 python: "2.7"
 
 env:
-  # Defaults
-  splunk_default_password: passw0rd!
-  splunk_default_http_port: 8000
+  global:
+    # Defaults
+    splunk_default_password: passw0rd!
+    splunk_default_http_port: 8000
 
 before_install:
   # Make sure everything's up to date.
@@ -18,7 +19,6 @@ install:
 
   # Install deps
   - 'ansible-galaxy install geerlingguy.pip geerlingguy.docker'
-
 
 script:
   # We'll add some commands to test the role here.
@@ -36,7 +36,7 @@ script:
 #    || (echo 'Idempotence test: fail' && exit 1)
 
   # Request a page via the web server, to make sure it's running and responds.
-  - 'curl -u "admin:$splunk_default_password" "http://localhost:$splunk_default_http_port/"'
+  - 'curl -u "admin:${splunk_default_password}" "http://localhost:${splunk_default_http_port}/"'
 
 #  - 'docker logs splunk'
 
