@@ -1,7 +1,10 @@
-Role Name
-=========
+Splunk-Docker
+=============
 
-A brief description of the role goes here.
+[![Build Status](https://travis-ci.org/derekmerck/ansible-splunk-docker.svg?branch=master)](https://travis-ci.org/derekmerck/ansible-splunk-docker)
+
+Configure and run a Splunk data index in a Docker container.
+
 
 Requirements
 ------------
@@ -30,9 +33,12 @@ Including an example of how to use your role (for instance, with variables passe
 License
 -------
 
-BSD
+MIT
 
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+Derek Merck  
+<derek_merck@brown.edu>  
+Rhode Island Hospital and Brown University  
+Providence, RI  
