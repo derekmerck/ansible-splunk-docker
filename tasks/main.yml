@@ -6,9 +6,11 @@
 
 - name: Create data container
   docker_container:
-    name: '{{ splunk_container_name }}-data'
+    name: '{{ splunk_container_name + "-data" }}'
     image: busybox
     state: present
+    volumes:
+      - /opt/splunk
   when: splunk_use_data_container
 
 - name: Pull Splunk image
@@ -27,16 +29,14 @@
       - '{{ splunk_admin_port }}:8088'
       - '{{ splunk_hec_port }}:8089'
     volumes_from:
-      - '{{ ( splunk_use_data_container and ( splunk_container_name + "-data" )) | default(omit) }}'
+      - '{{ ( splunk_container_name + "-data" ) if splunk_use_data_container else None | default(omit) }}'
     volumes:
-      - '{{ ( not splunk_use_data_container and (splunk_data_dir + ":/opts/splunk" )) | default(omit) }}'
+      - '{{ (splunk_data_dir + ":/opts/splunk") if not splunk_use_data_container else None | default(omit) }}'
     env:
       TZ: '{{ splunk_container_timezone }}'
       SPLUNK_START_ARGS: "--accept-license"
       SPLUNK_USER:  "splunk"
       SPLUNK_CMD:   "edit user admin -password {{ splunk_password }} -role admin -auth admin:changeme"
-
-#  notify: restart_orthanc_container
   register: splunk_container
 
 - name: Wait until Splunk is available
