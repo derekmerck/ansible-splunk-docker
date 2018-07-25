@@ -10,7 +10,7 @@
     image: busybox
     state: present
     volumes:
-      - /opt/splunk
+      - /opt/splunk/var/lib/splunk
   when: splunk_use_data_container
 
 - name: Pull Splunk image
@@ -23,15 +23,12 @@
     name:  '{{ splunk_container_name }}'
     image: '{{ splunk_docker_image }}:{{ splunk_docker_image_tag }}'
     state:  started
-    memory: '{{ container_memory_limit | default(omit) }}'
     ports:
       - '{{ splunk_http_port }}:8000'
       - '{{ splunk_admin_port }}:8088'
       - '{{ splunk_hec_port }}:8089'
-    volumes_from:
-      - '{{ ( splunk_container_name + "-data" ) if splunk_use_data_container else None | default(omit) }}'
-    volumes:
-      - '{{ (splunk_data_dir + ":/opts/splunk") if not splunk_use_data_container else None | default(omit) }}'
+    volumes_from: ['{{ ( splunk_container_name + "-data" ) if splunk_use_data_container else None | default(omit) }}']
+    volumes: ['{{ (splunk_data_dir + ":/opt/splunk/var/lib/splunk") if not splunk_use_data_container else None | default(omit) }}']
     env:
       TZ: '{{ splunk_container_timezone }}'
       SPLUNK_START_ARGS: "--accept-license"
