@@ -38,5 +38,7 @@ script:
   # Request a page via the web server, to make sure it's running and responds.
   - "curl -u admin:${splunk_default_password} http://localhost:${splunk_default_http_port}/"
 
+  - "docker logs splunk"
+
 notifications:
     webhooks: https://galaxy.ansible.com/api/v1/notifications/

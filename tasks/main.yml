@@ -33,7 +33,7 @@
       TZ: '{{ splunk_container_timezone }}'
       SPLUNK_START_ARGS: "--accept-license"
       SPLUNK_USER:  "splunk"
-      SPLUNK_CMD:   "edit user admin -password {{ splunk_password }} -role admin -auth admin:changeme"
+      SPLUNK_CMD:   'edit user admin -password {{ splunk_password }} -role admin -auth admin:changeme'
   register: splunk_container
 
 - name: Wait until Splunk is available
