@@ -1,0 +1,5 @@
+---
+- hosts: '{{ host | default( "localhost") }}'
+  roles:
+
+    - role: '{{ "splunk-docker" if host=="vagrant" else "ansible-splunk-docker" }}'

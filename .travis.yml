@@ -23,10 +23,10 @@ install:
 script:
   # We'll add some commands to test the role here.
   # Check the role/playbook's syntax.
-  - 'ansible-playbook -i tests/inventory tests/test.yml --syntax-check'
+  - 'ansible-playbook -i tests/test_inv.yml tests/test_play.yml --syntax-check'
 
   # Run the role/playbook with ansible-playbook.
-  - 'ansible-playbook -i tests/inventory tests/test.yml --connection=local --sudo -vvv'
+  - 'ansible-playbook -i tests/test_inv.yml tests/test_play.yml --connection=local --sudo -vvv'
 
 #  # Run the role/playbook again, checking to make sure it's idempotent.
 #  - >
