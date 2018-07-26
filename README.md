@@ -23,6 +23,8 @@ Set the Splunk version tag.
 splunk_docker_image_tag:   "latest"
 ```
 
+This probably only works with Splunk v7 or later, because they changed the mechanism for setting the initial administrator password.
+
 ### Docker Container Configuration
 
 ```yaml

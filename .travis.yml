@@ -6,8 +6,9 @@ python: "2.7"
 env:
   global:
     # Defaults
-    splunk_default_password: passw0rd!
-    splunk_default_http_port: 8000
+    test_host: localhost
+    splunk_password: passw0rd!
+    splunk_http_port: 8000
 
 before_install:
   # Make sure everything's up to date.
@@ -23,10 +24,10 @@ install:
 script:
   # We'll add some commands to test the role here.
   # Check the role/playbook's syntax.
-  - 'ansible-playbook -i tests/test_inv.yml tests/test_play.yml --syntax-check'
+  - 'ansible-playbook -i tests/test_inv.yml tests/test_play.yml --syntax-check -e test_host=${test_host}'
 
   # Run the role/playbook with ansible-playbook.
-  - 'ansible-playbook -i tests/test_inv.yml tests/test_play.yml --connection=local --sudo -vvv'
+  - 'ansible-playbook -i tests/test_inv.yml tests/test_play.yml --connection=local --sudo test_host=${test_host}'
 
 #  # Run the role/playbook again, checking to make sure it's idempotent.
 #  - >
@@ -36,7 +37,7 @@ script:
 #    || (echo 'Idempotence test: fail' && exit 1)
 
   # Request a page via the web server, to make sure it's running and responds.
-  - 'curl -u "admin:${splunk_default_password}" -L "http://localhost:${splunk_default_http_port}/"'
+  - 'curl -u "admin:${splunk_password}" -L "http://localhost:${splunk_http_port}/"'
 
 #  - 'docker logs splunk'
 
