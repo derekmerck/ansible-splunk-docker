@@ -37,7 +37,7 @@ script:
 #    || (echo 'Idempotence test: fail' && exit 1)
 
   # Request a page via the web server, to make sure it's running and responds.
-  - 'curl -u admin:${splunk_password} -L http://localhost:${splunk_http_port}/en-US/'
+  #- 'curl -u admin:${splunk_password} -L http://localhost:${splunk_http_port}/en-US/'
 
 
 notifications:
