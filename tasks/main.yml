@@ -13,9 +13,9 @@
       - /opt/splunk/var/lib/splunk
   when: splunk_use_data_container
 
-- name: Pull Splunk image
+- name: "Pull Splunk image - splunk/splunk:{{ splunk_docker_image_tag }}"
   docker_image:
-    name: '{{ splunk_docker_image }}'
+    name: 'splunk/splunk'
     tag:  '{{ splunk_docker_image_tag }}'
 
 #docker run -d -e "SPLUNK_START_ARGS=--accept-license " -e "SPLUNK_USER=root" -p "8000:8000" splunk/splunk

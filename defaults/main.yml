@@ -1,7 +1,8 @@
 ---
 # defaults file for splunk-docker
 
-splunk_docker_image:       "splunk/splunk"
+# Docker image configuration
+# -----------------------------
 splunk_docker_image_tag:   "latest"
 
 # Docker container configuration

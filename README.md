@@ -34,7 +34,7 @@ Role Variables
 
 ### Docker Image and Tag
 
-Always uses the official [splunk][] image.
+Always uses the official [Splunk][] image.
 
 [splunk]: https://hub.docker.com/r/splunk/splunk/
 
@@ -51,7 +51,7 @@ This probably only works with Splunk v7 or later, because they changed the mecha
 ```yaml
 splunk_container_name:     "splunk"
 splunk_use_data_container: True
-splunk_data_dir:           "/opt/splunk"
+splunk_data_dir:           "/opt/{{ splunk_container_name }}"
 splunk_http_port:          8000
 splunk_admin_port:         8088
 splunk_hec_token:          8089
@@ -70,9 +70,9 @@ Example Playbook
 ----------------
 
 ```yaml
-- hosts: servers
+- hosts: indexer
   roles:
-     - derekmerck.splunk-docker
+     - derekmerck.splunk_docker
 ```
 
 
