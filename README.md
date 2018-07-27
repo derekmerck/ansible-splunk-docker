@@ -3,19 +3,27 @@ Splunk-Docker
 
 [![Build Status](https://travis-ci.org/derekmerck/ansible-splunk-docker.svg?branch=master)](https://travis-ci.org/derekmerck/ansible-splunk-docker)
 
-Configure and run a Splunk data index in a Docker container.
+Configure and run a [Splunk](http://www.splunk.com) data index in a Docker container.
 
 
 Requirements
 ------------
 
-Requires Docker, Docker-py and the `docker_image` and `docker_container` modules.
+- [Docker][]
+- [docker-py][]
+
+[Docker]: https://www.docker.com
+[docker-py]: https://docker-py.readthedocs.io
 
 
 Role Variables
 --------------
 
 ### Docker Image and Tag
+
+Always uses the official [splunk][] image.
+
+[splunk]: https://hub.docker.com/r/splunk/splunk/
 
 Set the Splunk version tag.
 
@@ -46,7 +54,9 @@ splunk_password:            "passw0rd!"
 Dependencies
 ------------
 
-- `geerlingguy.docker` to setup the docker environment
+- [geerlingguy.docker](https://github.com/geerlingguy/ansible-role-docker) to setup the docker environment
+- [geerlingguy.pip](https://github.com/geerlingguy/ansible-role-pip) to install Python reqs
+
 
 Example Playbook
 ----------------
@@ -62,6 +72,7 @@ License
 -------
 
 MIT
+
 
 Author Information
 ------------------

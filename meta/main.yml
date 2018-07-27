@@ -1,6 +1,6 @@
 galaxy_info:
   author: Derek Merck
-  description: Configure and run a Splunk data index in a Docker container.
+  description: Configure and run a [Splunk](http://www.splunk.com) data index in a Docker container.
 
   role_name: splunk-docker
 
