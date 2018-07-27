@@ -1,13 +1,26 @@
-Splunk-Docker
-=============
+Ansible Role for Splunk in Docker
+=================================
 
 [![Build Status](https://travis-ci.org/derekmerck/ansible-splunk-docker.svg?branch=master)](https://travis-ci.org/derekmerck/ansible-splunk-docker)
+
+Derek Merck  
+<derek_merck@brown.edu>  
+Rhode Island Hospital and Brown University  
+Providence, RI  
 
 Configure and run a [Splunk](http://www.splunk.com) data index in a Docker container.
 
 
-Requirements
+Dependencies
 ------------
+
+### Galaxy Roles
+
+- [geerlingguy.docker](https://github.com/geerlingguy/ansible-role-docker) to setup the docker environment
+- [geerlingguy.pip](https://github.com/geerlingguy/ansible-role-pip) to install Python reqs
+
+
+### Remote Node
 
 - [Docker][]
 - [docker-py][]
@@ -51,11 +64,6 @@ splunk_container_timezone: "America/New_York"
 splunk_password:            "passw0rd!"
 ```
 
-Dependencies
-------------
-
-- [geerlingguy.docker](https://github.com/geerlingguy/ansible-role-docker) to setup the docker environment
-- [geerlingguy.pip](https://github.com/geerlingguy/ansible-role-pip) to install Python reqs
 
 
 Example Playbook
@@ -72,12 +80,3 @@ License
 -------
 
 MIT
-
-
-Author Information
-------------------
-
-Derek Merck  
-<derek_merck@brown.edu>  
-Rhode Island Hospital and Brown University  
-Providence, RI  
