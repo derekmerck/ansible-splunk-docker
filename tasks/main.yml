@@ -29,7 +29,7 @@
       - '{{ splunk_admin_port }}:8088'
       - '{{ splunk_hec_port }}:8089'
     volumes_from: '{{ [splunk_container_name + "-data"] if splunk_use_data_container else [] }}'
-    volumes: '{{ ["{}:/opt/splunk/etc/system/local".format(orthanc_config_dir)] + ([splunk_data_dir + ":/opt/splunk/var/lib/splunk"] if not splunk_use_data_container else [] ) }}'
+    volumes: '{{ ["{}:/opt/splunk/etc/system/local".format(splunk_config_dir)] + ([splunk_data_dir + ":/opt/splunk/var/lib/splunk"] if not splunk_use_data_container else [] ) }}'
     env:
       TZ: '{{ splunk_container_timezone }}'
       SPLUNK_START_ARGS: '--accept-license --seed-passwd {{ splunk_password }}'
