@@ -76,6 +76,17 @@ Example Playbook
 ```
 
 
+Vagrant
+-----------------
+
+You need at _least_ 1GB of RAM available to run Splunk, but Vagrant has only 500MB out of the box.  To fix, add something like this to your Vagrantfile:
+
+```Vagrantfile
+  config.vm.provider "virtualbox" do |vb|
+     vb.memory = "4096"
+  end
+```
+
 License
 -------
 

@@ -1,6 +1,3 @@
-# IMPORTANT!  If using Splunk, you need at _least_ 1GB of ram
-# Vagrant has only 500MB out of the box
-
 ---
 # tasks file for splunk-docker
 
@@ -40,4 +37,3 @@
 - name: Wait until Splunk is available
   wait_for: port={{ splunk_http_port }} delay=3
   when: splunk_container.changed
-
