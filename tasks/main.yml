@@ -14,11 +14,16 @@
       - /opt/splunk/var/lib/splunk
   when: splunk_use_data_container
 
-- name:    "Setup orthanc data folder"
+- name:    "Setup splunk data folder"
   file:
     path:  "{{ splunk_data_dir }}"
     state: directory
   when: not splunk_use_data_container
+
+- name:    "Setup splunk config folder"
+  file:
+    path:  "{{ splunk_config_dir }}"
+    state: directory
 
 #############################
 # Setup container
