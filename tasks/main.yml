@@ -1,6 +1,10 @@
 ---
 # tasks file for splunk-docker
 
+#############################
+# Create required data container and directories
+#############################
+
 - name: Create data container
   docker_container:
     name: '{{ splunk_container_name + "-data" }}'
@@ -9,6 +13,16 @@
     volumes:
       - /opt/splunk/var/lib/splunk
   when: splunk_use_data_container
+
+- name:    "Setup orthanc data folder"
+  file:
+    path:  "{{ splunk_data_dir }}"
+    state: directory
+  when: not splunk_use_data_container
+
+#############################
+# Setup container
+#############################
 
 - name: "Pull Splunk image - splunk/splunk:{{ splunk_docker_image_tag }}"
   docker_image:
@@ -30,8 +44,9 @@
     env:
       TZ: '{{ splunk_container_timezone }}'
       SPLUNK_START_ARGS: '--accept-license --seed-passwd {{ splunk_password }}'
-      SPLUNK_USER:  "splunk"
-#      SPLUNK_CMD:   'edit user admin -password {{ splunk_password }} -role admin -auth admin:changeme'
+      SPLUNK_USER:  'splunk'
+      SPLUNK_CMD:   'edit user admin -password {{ splunk_password }} -role admin -auth admin:changeme'
+      SPLUMK_CMD1:  'set minfreemb 10000 -auth admin:{{ splunk_password }}'  # Reduce required disk space
   register: splunk_container
 
 - name: Wait until Splunk is available
