@@ -1,6 +1,9 @@
 ---
 # defaults file for splunk-docker
 
+data_dir: "/data"
+config_dir: "/config"
+
 # Docker image configuration
 # -----------------------------
 splunk_docker_image_tag:   "latest"
@@ -9,8 +12,13 @@ splunk_docker_image_tag:   "latest"
 # -----------------------------
 splunk_container_name:     "splunk"
 splunk_use_data_container: True
-splunk_data_dir:           "/data/{{ splunk_container_name }}"
-splunk_config_dir:         "/opt/{{ splunk_container_name }}"
+
+splunk_base_data_dir:      "/data"
+splunk_data_dir:           "{{ data_dir }}/{{ splunk_container_name }}"
+
+splunk_base_config_dir:    "/config"
+splunk_config_dir:         "{{ config_dir }}/{{ splunk_container_name }}"
+
 splunk_http_port:          8000
 splunk_admin_port:         8088
 splunk_hec_port:           8089
