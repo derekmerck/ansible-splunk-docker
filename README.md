@@ -54,7 +54,7 @@ splunk_use_data_container: True
 splunk_data_dir:           "/opt/{{ splunk_container_name }}"
 splunk_http_port:          8000
 splunk_admin_port:         8088
-splunk_hec_token:          8089
+splunk_hec_port:           8089
 splunk_container_timezone: "America/New_York"
 ```
 
@@ -62,8 +62,19 @@ splunk_container_timezone: "America/New_York"
 
 ```yaml
 splunk_password:            "passw0rd!"
+splunk_extra_indices:      []
+splunk_extra_hecs:         {}
+splunk_save_toks:          False
 ```
 
+`extra_indices` should be a list like `['index1', 'index2', etc...]`
+
+`extra_toks` should be a dict like `{'tok_name': {'desc': 'My token', 'index': 'index1'} }`
+
+
+### Splunkbase
+
+Any Splunkbase plugins in "{{ role_path }}/splunk-apps*.tgz" are copied into the container and installed.
 
 
 Example Playbook

@@ -2,3 +2,13 @@
 - hosts: '{{ test_host | default( "localhost") }}'
   roles:
     - role: '{{ "splunk-docker" if test_host=="vagrant" else "ansible-splunk-docker" }}'
+      vars:
+        splunk_extra_indices: ['logging', 'dicom', 'remotes']
+        splunk_extra_toks:
+          logging_tok:
+            desc: Splunk logging service token
+            index: logging
+          remotes_tok:
+            desc: Splunk remote monitoring service token
+            index: remotes
+
