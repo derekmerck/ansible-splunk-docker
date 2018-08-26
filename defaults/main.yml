@@ -1,7 +1,7 @@
 ---
 # defaults file for splunk-docker
 
-data_dir: "/data"
+data_dir:   "/data"
 config_dir: "/config"
 
 # Docker image configuration
@@ -20,8 +20,8 @@ splunk_base_config_dir:    "/config"
 splunk_config_dir:         "{{ config_dir }}/{{ splunk_container_name }}"
 
 splunk_http_port:          8000
-splunk_admin_port:         8088
-splunk_hec_port:           8089
+splunk_admin_port:         8089
+splunk_hec_port:           8088
 splunk_container_timezone: "America/New_York"
 
 # Service configuration
@@ -30,5 +30,3 @@ splunk_password:           "passw0rd!"
 
 splunk_extra_indices:      []
 splunk_extra_hecs:         {}
-
-splunk_save_toks:          False

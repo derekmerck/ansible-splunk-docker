@@ -27,6 +27,7 @@
     path:  "{{ splunk_config_dir }}"
     state: directory
 
+
 #############################
 # Setup container
 #############################
@@ -44,25 +45,40 @@
     state:  started
     ports:
       - '{{ splunk_http_port }}:8000'
-      - '{{ splunk_admin_port }}:8088'
-      - '{{ splunk_hec_port }}:8089'
+      - '{{ splunk_admin_port }}:8089'
+      - '{{ splunk_hec_port }}:8088'
     volumes_from: '{{ [splunk_container_name + "-data"] if splunk_use_data_container else [] }}'
     volumes: '{{ ["{}:/opt/splunk/etc/system/local".format(splunk_config_dir)] + ([splunk_data_dir + ":/opt/splunk/var/lib/splunk"] if not splunk_use_data_container else [] ) }}'
+    log_driver: json-file  # Ignore splunk logging default if present
     env:
       TZ: '{{ splunk_container_timezone }}'
       SPLUNK_START_ARGS: '--accept-license --seed-passwd {{ splunk_password }}'
       SPLUNK_USER:  'splunk'
-      # SPLUNK_CMD:   'edit user admin -password {{ splunk_password }} -role admin -auth admin:changeme'
-      SPLUMK_CMD1:  'set minfreemb 500 -auth admin:{{ splunk_password }}'  # Reduce required disk space
+      # If it's a small hdd, need to reduce the required hdd space
+      SPLUNK_CMD:   'set minfreemb 500 -auth admin:{{ splunk_password }}'
+      SPLUNK_CMD_1: "http-event-collector enable -enable-ssl 0 -uri https://localhost:8089 -auth admin:{{ splunk_password }}"
   register: splunk_container
+
+# If it's a small hdd, need to restart the container
+- name: Restart Splunk container
+  docker_container:
+    name:  '{{ splunk_container_name }}'
+    state:  started
+    restart: True
+  when: splunk_container.changed
 
 - name: Wait until Splunk is available
   wait_for: port={{ splunk_http_port }} delay=3
   when: splunk_container.changed
 
+
+#############################
+# Add indices and tokens
+#############################
+
 - name: Add service indices
   command: "docker exec {{ splunk_container_name }} bin/splunk add index {{ item }} -auth admin:{{ splunk_password }}"
-  with_list: splunk_extra_indices
+  with_list: "{{ splunk_extra_indices }}"
   ignore_errors: yes  # May already exist
 
 - name: Add service tokens
@@ -90,7 +106,7 @@
     var: splunk_toks
 
 - debug:
-    msg: "Saving tokens to 'secret_tokens.txt'"
+    msg: "Saving tokens to 'secrets.txt'"
 
 - local_action: copy content={{ splunk_toks }} dest='secrets.txt'
   become: No

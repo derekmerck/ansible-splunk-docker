@@ -11,4 +11,3 @@
           remotes_tok:
             desc: Splunk remote monitoring service token
             index: remotes
-
