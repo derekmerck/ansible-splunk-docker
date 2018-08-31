@@ -48,7 +48,10 @@
       - '{{ splunk_admin_port }}:8089'
       - '{{ splunk_hec_port }}:8088'
     volumes_from: '{{ [splunk_container_name + "-data"] if splunk_use_data_container else [] }}'
-    volumes: '{{ ["{}:/opt/splunk/etc/system/local".format(splunk_config_dir)] + ([splunk_data_dir + ":/opt/splunk/var/lib/splunk"] if not splunk_use_data_container else [] ) }}'
+    volumes: '{{
+          ["{}:/opt/splunk/etc/system/local".format(splunk_config_dir)] +
+         ([splunk_data_dir + ":/opt/splunk/var/lib/splunk"] if not splunk_use_data_container else [] )
+       }}'
     log_driver: json-file  # Ignore splunk logging default if present
     env:
       TZ: '{{ splunk_container_timezone }}'
