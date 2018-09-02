@@ -1,29 +1,51 @@
 ---
 # defaults file for splunk-docker
 
-data_dir:   "/data"
-config_dir: "/config"
+data_dir:         "/data"
+config_dir:       "/config"
+service_password: "passw0rd!"
+common_name:      "example.com"
+public_host_name: "www"
 
 # Docker image configuration
 # -----------------------------
-splunk_docker_image_tag:   "latest"
+splunk_docker_image_tag: "latest"
 
 # Docker container configuration
 # -----------------------------
-splunk_container_name:     "splunk"
+splunk_container_name: "splunk"
 splunk_use_data_container: True
 
-splunk_data_dir:           "{{ data_dir }}/{{ splunk_container_name }}"
-splunk_config_dir:         "{{ config_dir }}/{{ splunk_container_name }}"
+splunk_data_dir:       "{{ data_dir }}/{{ splunk_container_name }}"
+splunk_config_dir:     "{{ config_dir }}/{{ splunk_container_name }}"
 
-splunk_http_port:          8000
-splunk_admin_port:         8089
-splunk_hec_port:           8088
+splunk_http_port:      8000
+splunk_admin_port:     8089
+splunk_hec_port:       8088
 splunk_container_timezone: "America/New_York"
 
 # Service configuration
 # -----------------------------
-splunk_password:           "passw0rd!"
+splunk_password:       "{{ service_password }}"
 
-splunk_extra_indices:      []
-splunk_extra_hecs:         {}
+# Indices to add/confirm exist
+splunk_indices:        []
+
+splunk_hec_enabled:    True
+
+# hec tokens to create/confirm and save their values locally
+splunk_create_hec_tokens: {}
+# name: { desc: foo, index: bar }
+
+# hec tokens to add directly by value
+splunk_hec_tokens:      {}
+# name: { desc: foo, index: bar, value: xxxxyyyy-xxx... }
+
+splunk_secured:         False
+splunk_cert_dir:       "{{ config_dir }}/certs"
+splunk_common_name:     "{{ common_name }}"
+splunk_public_host_name: "{{ public_host_name }}"
+splunk_host_name:       "{{ splunk_public_host_name }}.{{ splunk_common_name }}"
+
+# For vagrant or other small footprint installs, required disk space in MB (0=default 5000, 500 is ok)
+splunk_required_disk_size: 0

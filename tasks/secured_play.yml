@@ -1,0 +1,52 @@
+---
+
+- name: Set server name
+  ini_file:
+    path:    "{{ splunk_config_dir }}/server.conf"
+    section: "general"
+    option:  "{{ item.key }}"
+    value:   "{{ item.value }}"
+  with_dict:
+    serverName: "{{ splunk_host_name }}"
+  register: serverconf
+
+- name: Set web ssl
+  ini_file:
+    path:    "{{ splunk_config_dir }}/web.conf"
+    section: "settings"
+    option:  "{{ item.key }}"
+    value:   "{{ item.value }}"
+  with_dict:
+    enableSplunkWebSSL: false
+    caCertPath:  "$SPLUNK_HOME/etc/auth/certs/crt/{{ splunk_host_name }}.pem"
+    privKeyPath: "$SPLUNK_HOME/etc/auth/certs/private/{{ splunk_host_name }}.pem"
+  when: splunk_secured
+  register: webconf
+
+# Can't reach this with ini_file func and no need to preserve existing, so overwrite
+- name: Copy hec ssl
+  template:
+    src: httpinputs.conf.j2
+    dest: /tmp/httpinputs.conf
+    mode: 0777
+  when: splunk_secured or splunk_hec_tokens
+  register: hecconf
+
+- name: Make local directory
+  command: "docker exec {{ splunk_container_name }} mkdir -p /opt/splunk/etc/apps/splunk_httpinput/local"
+  when: hecconf.changed
+
+- name: Add hec ssl to container
+  command: "docker cp /tmp/httpinputs.conf {{ splunk_container_name }}:/opt/splunk/etc/apps/splunk_httpinput/local/inputs.conf"
+  when: hecconf.changed
+
+- name: Restart Splunk container
+  docker_container:
+    name:  '{{ splunk_container_name }}'
+    state:  started
+    restart: True
+  when: hecconf.changed or serverconf.changed or webconf.changed
+
+- name: Wait until Splunk is available
+  wait_for: port={{ splunk_http_port }} delay=3
+  when: hecconf.changed or serverconf.changed or webconf.changed

@@ -1,0 +1,26 @@
+---
+
+- name: Add service tokens
+  command: "docker exec {{ splunk_container_name }} bin/splunk http-event-collector create {{ item.key }} '{{ item.value.desc }}' -index {{ item.value.index }} -uri https://localhost:8089 -auth admin:{{ splunk_password }}"
+  with_dict: "{{ splunk_create_hec_tokens }}"
+  ignore_errors: yes  # May already exist
+
+- name: List available tokens
+  command:  "docker exec {{ splunk_container_name }} bin/splunk http-event-collector list -uri https://localhost:8089 -auth admin:{{ splunk_password }}"
+  register: result
+
+- set_fact:
+    # hec_tok: "{{ result.stdout | regex_findall(regexp) | first }}"
+    splunk_toks: "{{ splunk_toks | default({}) | combine({item.key: result.stdout | regex_findall(regexp) | first})}}"
+  vars:
+    regexp: 'http:\/\/{{ item.key }}\n\s*token=(?P<hec_tok>.*)\n'
+  with_dict: "{{ splunk_create_hec_tokens }}"
+
+- debug:
+    var: splunk_toks
+
+- debug:
+    msg: "Saving tokens to 'secrets/tokens.yml'"
+
+- local_action: copy content={{ splunk_toks }} dest='secrets/tokens.json'
+  become: No

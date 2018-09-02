@@ -1,0 +1,25 @@
+# Contents of: $SPLUNK_HOME/etc/apps/splunk_httpinput/local
+#
+# References for enabling ssl:
+# - https://support.uberagent.com/hc/en-us/articles/212656725-Enable-HTTPS-for-Splunk-HTTP-Event-Collector
+# - https://community.letsencrypt.org/t/how-could-i-get-the-password-for-keyfile/4703/2
+
+[http]
+{% if splunk_secured %}
+enableSSL = 1
+sslVersions = *,-ssl2
+allowSslCompression = true
+allowSslRenegotiation = true
+caPath = $SPLUNK_HOME/etc/auth/certs/crt
+caCertFile = {{ splunk_host_name }}.pem
+serverCert = $SPLUNK_HOME/etc/auth/certs/private/{{ splunk_host_name }}.pem
+{% endif %}
+disabled = {{ not splunk_hec_enabled | default(1) }}
+
+{% for tok, data in splunk_hec_tokens.items() %}
+[http://{{ tok }}]
+disabled = {{ data.disabled | default(0) }}
+description = {{  data.desc | default('') }}
+index = {{ data.index | default('main') }}
+token = {{ data.value }}
+{%  endfor %}
