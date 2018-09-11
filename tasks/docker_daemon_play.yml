@@ -1,0 +1,22 @@
+---
+# Reconfigure daemon (overwrites any other custom changes)
+- template:
+    src: docker.daemon.json.j2
+    dest: /etc/docker/daemon.json
+  register: docker_daemon_config
+
+# Bounce docker if needed
+- service:
+    name: docker
+    state: restarted
+  when: docker_daemon_config.changed
+
+# If splunk is containerized, it needs to be restarted
+- docker_container:
+    name: "{{ splunk_container_name }}"
+    state: started
+  when: docker_daemon_config.changed
+
+# Notify everything that should send logs to Splunk
+- set_fact:
+    logger: "splunk"

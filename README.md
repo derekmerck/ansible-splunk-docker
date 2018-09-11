@@ -19,6 +19,8 @@ Dependencies
 - [geerlingguy.docker](https://github.com/geerlingguy/ansible-role-docker) to setup the docker environment
 - [geerlingguy.pip](https://github.com/geerlingguy/ansible-role-pip) to install Python reqs
 
+Run with `--skip-tags deps` to skip installing dependency roles.
+
 
 ### Remote Node
 
@@ -31,6 +33,16 @@ Dependencies
 
 Role Variables
 --------------
+
+### Global Vars
+
+```yaml
+data_dir:         "/data"
+config_dir:       "/config"
+service_password: "passw0rd!"
+common_name:      "example.com"
+public_host_name: "splunk"
+```
 
 ### Docker Image and Tag
 
@@ -49,32 +61,36 @@ This probably only works with Splunk v7 or later, because they changed the mecha
 ### Docker Container Configuration
 
 ```yaml
-splunk_container_name:     "splunk"
+splunk_container_name: "splunk"
 splunk_use_data_container: True
-splunk_data_dir:           "/opt/{{ splunk_container_name }}"
-splunk_http_port:          8000
-splunk_admin_port:         8088
-splunk_hec_port:           8089
-splunk_container_timezone: "America/New_York"
+splunk_http_port:      8000
+splunk_admin_port:     8089
+splunk_hec_port:       8088
 ```
 
 ### Service Configuration
 
 ```yaml
-splunk_password:            "passw0rd!"
-splunk_extra_indices:      []
-splunk_extra_hecs:         {}
-splunk_save_toks:          False
+splunk_indices:        []
+splunk_hec_enabled:    True
+splunk_create_hec_tokens: {}
+splunk_hec_tokens:      {}
+splunk_secured:         False
+splunk_required_disk_size: 0
 ```
 
-`extra_indices` should be a list like `['index1', 'index2', etc...]`
+`indices` should be a list like `['index1', 'index2', etc...]`
 
-`extra_toks` should be a dict like `{'tok_name': {'desc': 'My token', 'index': 'index1'} }`
+`create_hec_tokens` should be a dict like `{'tok_name': {'desc': 'My token', 'index': 'index1'} }`
+
+`hec_tokens` adds values directly, should be a dict like `{'tok_name': {'desc': 'My token', 'index': 'index1', 'value': xxxxyyyy-xxx...} }`
+
+For vagrant or other small footprint installs, indicate `required_disk_size` in MB (0=default 5000, but 500 is ok)
 
 
 ### Splunkbase
 
-Any Splunkbase plugins in "{{ role_path }}/splunk-apps*.tgz" are copied into the container and installed.
+Any Splunkbase plugins in "{{ role_path }}/splunk-apps/*.tgz" are copied into the container and installed.
 
 
 Example Playbook
@@ -86,6 +102,17 @@ Example Playbook
      - derekmerck.splunk_docker
 ```
 
+Extra Tasks
+-----------------
+
+Call `docker_logger_play` to setup the Splunk logger for Docker for other `derekmerck` namespace roles.
+
+```yaml
+- include_role: derekmerck.splunk_docker
+  tasks_from:  docker_logger_play
+```
+
+Requires a properly configured host group `indexers'
 
 Vagrant
 -----------------

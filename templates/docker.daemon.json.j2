@@ -1,0 +1,8 @@
+{
+  "log-driver": "splunk",
+  "log-opts": {
+      "splunk-token": "{{ hostvars[groups["indexers"][0]].splunk_hec_tokens.logging_tok.value }}",
+      "splunk-url": "{{ 'https' if splunk_secured else 'http' }}://{{ hostvars[groups['indexers'][0]].public_host_name }}.{{ common_name }}:{{ spunk_hec_port }}",
+      "splunk-index": "{{ hostvars[groups["indexers"][0]].splunk_hec_tokens.logging_tok.index }}"
+  }
+}

@@ -58,9 +58,6 @@
       TZ: '{{ splunk_container_timezone }}'
       SPLUNK_START_ARGS: '--accept-license --seed-passwd {{ splunk_password }}'
       SPLUNK_USER:  'root'
-      # If it's a small hdd, need to reduce the required hdd space
-      SPLUNK_CMD:   'set minfreemb 500 -auth admin:{{ splunk_password }}'
-      # SPLUNK_CMD_1: "http-event-collector enable -enable-ssl 0 -uri https://localhost:8089 -auth admin:{{ splunk_password }}"
   register: splunk_container
 
 # Sometimes this wait needs to be much longer even though the http service is up
